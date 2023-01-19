@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import axios from "axios"
 
-axios.baseURL = "https://scheduler-api-chunyu.up.railway.app"
+axios.defaults.baseURL = "https://scheduler-api-chunyu.up.railway.app";
 
 export default function useApplicationData (props) {
   const [state, setState] = useState({
