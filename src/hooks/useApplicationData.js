@@ -52,7 +52,7 @@ export default function useApplicationData (props) {
       [id]: appointment
       
     };
-    const days = updateSpot(true)
+    const days = updateSpot(true,appointments)
    return axios.put(`/api/appointments/${id}`, {interview})
     .then(()=>{
       setState({
@@ -72,7 +72,7 @@ export default function useApplicationData (props) {
       ...state.appointments,
       [id]:appointment
     }
-    const days = updateSpot(false)
+    const days = updateSpot(false,appointments)
     return axios.delete(`/api/appointments/${id}`)
     .then(() => {
       
@@ -84,14 +84,16 @@ export default function useApplicationData (props) {
     })
   }
 
-  function updateSpot (isBooking) {
+  function updateSpot (isBooking,appointments) {
     const currentDayIndex = state.days.findIndex(day => day.name === state.day);
     const currentDay = {...state.days[currentDayIndex]}
-    if(isBooking){
-      currentDay.spots -= 1;
-    } else {
-      currentDay.spots += 1;
-    } 
+    let spots = 0;
+    for(let key of currentDay.appointments) {
+      if(!appointments[key].interview){
+        spots += 1;
+      } 
+    }
+     currentDay.spots = spots;
     const days = [...state.days] 
     days[currentDayIndex] = currentDay
     return days
